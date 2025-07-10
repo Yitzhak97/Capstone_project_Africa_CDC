@@ -1,0 +1,15 @@
+name: ebovar
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - fastqc=0.12.*
+  - fastp=0.23.*
+  - bwa=0.7.*
+  - samtools=1.18
+  - bcftools=1.18
+  - seqkit=2.5.*
+  - multiqc=1.15
+  - picard=2.27.*
+  - python=3.10

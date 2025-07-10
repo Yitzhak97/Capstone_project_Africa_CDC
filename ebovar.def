@@ -1,0 +1,86 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%labels
+    Maintainer Makonk Najah, Stella E Nabirye, Isaac Adison
+    Version v1.0
+    Description "EBOV Variant Analysis Pipeline Container (Mamba-based)"
+
+%help
+    ------------------------------------------------------------------------
+    EBOV Variant Analysis Pipeline: QC → Trimming → Alignment → Variant Calling
+
+    This container runs:
+      1. FastQC         - quality check on raw and trimmed reads
+      2. fastp          - trimming, filtering, and adapter removal
+      3. BWA-MEM        - alignment to EBOV reference genome
+      4. samtools       - BAM processing and indexing
+      5. bcftools       - variant calling and VCF sorting/indexing
+      6. MultiQC        - combined reporting for all QC steps
+
+    🧾 Usage:
+      singularity run ebovar.sif -i <input_folder> -o <output_folder> -r <reference.fa> [-t <threads>]
+
+    📂 Mount input/output folders using --bind
+
+    All tools are installed via Mamba (Miniforge) using environment.yml
+
+    Authors:
+      Makonk Najah
+      Stella E Nabirye
+      Isaac Adison
+    ------------------------------------------------------------------------
+
+%post
+    # Install system packages
+    apt-get update && apt-get install -y \
+        wget \
+        bzip2 \
+        curl \
+        ca-certificates \
+        git \
+        libglib2.0-0 \
+        libxext6 \
+        libsm6 \
+        libxrender1 \
+        && apt-get clean
+
+    # Install Mamba via Miniforge
+    wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O miniforge.sh
+    bash miniforge.sh -b -p /opt/conda
+    rm miniforge.sh
+    export PATH="/opt/conda/bin:$PATH"
+
+    # Create environment with mamba
+    /opt/conda/bin/mamba env create -f /environment.yml
+
+    # Link environment binaries to /usr/local/bin
+    ln -s /opt/conda/envs/ebovar/bin/* /usr/local/bin/
+
+    # Make main pipeline script executable
+    chmod +x /usr/local/bin/eboVar.sh
+
+
+%environment
+    export PATH="/opt/conda/envs/ebovar/bin:/opt/conda/bin:$PATH"
+    export LC_ALL=C
+    export LANG=C
+
+%files
+    environment.yml /environment.yml
+    eboVar.sh /usr/local/bin/eboVar.sh
+
+%runscript
+    exec /usr/local/bin/eboVar.sh "$@"
+
+# ------------------------------------------------------------------------------
+# 📦 Build the container image (requires root privileges):
+#     sudo apptainer build ebovar.sif ebovar.def
+#
+# 🚀 Run the pipeline from your current working directory with bind mount:
+#     apptainer run --bind $(pwd):/data ebovar.sif \
+#         -i /data/rawreads \
+#         -o /data/results_container \
+#         -r /data/ebov_ref.fa \
+#         -t 4
+# ------------------------------------------------------------------------------
