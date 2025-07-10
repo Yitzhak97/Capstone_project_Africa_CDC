@@ -5,17 +5,15 @@
 This capstone project challenges participants to design and implement a comprehensive bioinformatics pipeline for analyzing raw Illumina sequencing data of Ebola virus isolates. The project emphasizes command-line scripting, data manipulation, variant calling, data wrangling and analysis, and containerization for reproducibility.
 
 ### Tools used in the pipeline
-1. FastQC         - quality check of raw reads
-2. fastp          - trimming and filtering
-3. MultiQC        - reporting
-4. BWA            - Alignment
+1. FastQC         
+2. fastp          
+3. MultiQC        
+4. BWA            
 5. Samtools
 6. BCFtools
 
 
----
-
-⚙ Pipeline Steps
+## Pipeline Steps
 
 The pipeline (eboVar.sh) performs:
 
@@ -34,9 +32,7 @@ The pipeline (eboVar.sh) performs:
 7. Sort + index VCF
 
 
----
-
-🧰 Requirements
+## Requirements
 
 Linux environment
 
@@ -47,9 +43,7 @@ Apptainer (for container use)
 Tools listed in containers/ebovar.yml
 
 
----
-
-🚀 How to Run
+## How to Run
 
 📥 Clone repository & prepare
 
@@ -64,9 +58,7 @@ conda activate ebovar
 bash scripts/eboVar.sh -i data/raw -o results -r data/reference/ebov_ref.fa -t 4
 
 
----
-
-📦 Containerized workflow
+## Containerized workflow
 
 Build Apptainer container
 
@@ -77,9 +69,7 @@ Run pipeline inside container
 apptainer run containers/ebovar.sif -i data/raw -o results -r data/reference/ebov_ref.fa -t 4
 
 
----
-
-📊 Downstream analysis
+## Downstream analysis 📊
 
 1️⃣ Filter high-quality variants:
 
@@ -90,9 +80,7 @@ bash scripts/test.sh
 Rscript scripts/variant_analysis.R
 
 
----
-
-📑 Outputs
+## Outputs 📑
 
 MultiQC HTML report (results/qc/)
 
@@ -107,10 +95,7 @@ Merged high-quality variant table (hq_allvariants.tsv)
 R Markdown/PDF report with plots
 
 
-
----
-
-📖 Documentation
+## Documentation 📖
 
 All scripts are well-commented.
 README.md explains:
@@ -122,8 +107,6 @@ Usage instructions
 Containerization details
 
 Expected outputs
-
-
 
 ---
 
