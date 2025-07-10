@@ -19,7 +19,7 @@ This capstone project challenges participants to design and implement a comprehe
 
 The pipeline (eboVar.sh) performs:
 
-1. Step 1: FastQC on raw reads
+1. FastQC on raw reads
 
 2. Trimming with fastp
 
