@@ -52,22 +52,26 @@ cd Capstone_EboVar
 
 ✅ Run locally with conda
 
-Python 
-#  conda env create -f containers/ebovar.yml conda activate ebovar
-  
-bash scripts/eboVar.sh -i data/raw -o results -r data/reference/ebov_ref.fa -t 4
+```bash
+Conda env create -f containers/ebovar.yml conda activate ebovar
+```
 
+ ```bash 
+bash scripts/eboVar.sh -i data/raw -o results -r data/reference/ebov_ref.fa -t 4
+``` 
 
 ## Containerized workflow
 
 Build Apptainer container
 
+ ```bash 
 apptainer build containers/ebovar.sif containers/ebovar.def
+```
 
 Run pipeline inside container
-
+ ```bash 
 apptainer run containers/ebovar.sif -i data/raw -o results -r data/reference/ebov_ref.fa -t 4
-
+```
 
 ## Downstream analysis 📊
 
