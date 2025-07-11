@@ -52,9 +52,9 @@ cd Capstone_EboVar
 
 ✅ Run locally with conda
 
-conda env create -f containers/ebovar.yml
-conda activate ebovar
-
+Python 
+#  conda env create -f containers/ebovar.yml conda activate ebovar
+  
 bash scripts/eboVar.sh -i data/raw -o results -r data/reference/ebov_ref.fa -t 4
 
 
