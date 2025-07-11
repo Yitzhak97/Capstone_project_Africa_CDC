@@ -57,9 +57,16 @@ data_allvariants <- data_allvariants %>%
 
 ```{r}
 #Determine the type of each variant (Transition:A<->C, OR G<->C, or Transversion) and add them to a new column called Type
+is_transition <- function(ref, alt) {
+  (ref == "A" & alt == "G") |
+    (ref == "G" & alt == "A") |
+    (ref == "C" & alt == "T") |
+    (ref == "T" & alt == "C")
+}
+
 data_allvariants <- data_allvariants %>%
-  mutate(Type = case_when(mutation %in% c("AT","TA","GC","CG") ~ "Transition",
-                          mutation %in% c("AG", "GA", "AC", "CA", "TC", "CT", "TG", "GT") ~ "Transversion"))
+  filter(nchar(REF) == 1 & nchar(ALT) == 1) %>%  # keep only SNPs
+  mutate(Type = ifelse(is_transition(REF, ALT), "Transition", "Transversion"))
 
 ```
 

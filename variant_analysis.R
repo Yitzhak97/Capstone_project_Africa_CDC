@@ -14,7 +14,7 @@ library(data.table)
 data_allvariants <- fread("vcf/hq_allvariants.tsv")
 data_allvariants <- na.omit(data_allvariants)
 
-#Calculate the total number of high quality variants per sample
+#Calculate and plot the total number of high quality variants per sample
 
 high_qual_vars <- data_allvariants %>%
   group_by(Sample) %>%
@@ -38,7 +38,19 @@ data_allvariants <- data_allvariants %>%
   mutate(Type = case_when(mutation %in% c("AT","TA","GC","CG") ~ "Transition",
                           mutation %in% c("AG", "GA", "AC", "CA", "TC", "CT", "TG", "GT") ~ "Transversion"))
 
-#Analyze the distribution of variant types per sample both count and proportions
+is_transition <- function(ref, alt) {
+  (ref == "A" & alt == "G") |
+    (ref == "G" & alt == "A") |
+    (ref == "C" & alt == "T") |
+    (ref == "T" & alt == "C")
+}
+
+data_allvariants <- data_allvariants %>%
+  filter(nchar(REF) == 1 & nchar(ALT) == 1) %>%  # keep only SNPs
+  mutate(Type = ifelse(is_transition(REF, ALT), "Transition", "Transversion"))
+
+
+#Analyze and plot the distribution of variant types per sample both count and proportions
 Var_dist <- data_allvariants %>%
   na.omit() %>%
   group_by(Sample, Type) %>%
@@ -89,6 +101,5 @@ common_variants <- variant_counts %>%
 ## Join back to see which sample each unique variant belongs to
 unique_variants_with_samples <- unique_variants %>%
   inner_join(variant_sample_table, by = "variant_id")
-
 
 
